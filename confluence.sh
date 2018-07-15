@@ -3,6 +3,9 @@ set -x
 # centos install confluence 6.3 how to 
 #https://www.cnblogs.com/kevingrace/p/7607442.html
 
+yum -y install mariadb mariadb-server
+systemctl start mariadb
+systemctl enable mariadb
 systemctl stop firewalld
 systemctl disable firewalld
 yum install -y unzip
@@ -19,23 +22,44 @@ python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1cWxoY5
 python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1yOT9a4WCx9IsjtNL3ABNLQ
 python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1za0uLU0z6TPM5iNhkXfQFA
 wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.rpm
+wget https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-5.6.6-x64.bin
+
 }
 #do_download
-
+systemctl stop confluence
+service confluence stop
+/etc/init.d/confluence stop
+userdel confluence
+rpm -ivh jdk-8u131-linux-x64.rpm
 rm -rf /opt/atlassian/
 rm -rf /var/atlassian/
-chmod a+x atlassian-confluence-6.3.1-x64.bin
-./atlassian-confluence-6.3.1-x64.bin
+chmod a+x atlassian-confluence-*.bin
+./atlassian-confluence-5.6.6-x64.bin
+#./atlassian-confluence-6.3.1-x64.bin
 #create database confluence default character set utf8 collate utf8_bin;
 #grant all on confluence.* to 'confluence'@'%' identified by 'confluence0987654321';
-/etc/init.d/confluence start
+/etc/init.d/confluence restart
 sleep 20
 /etc/init.d/confluence stop
-cp atlassian-extras-decoder-v2-3.2.jar /opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.2.jar
-cp atlassian-universal-plugin-manager-plugin-2.22.jar /opt/atlassian/confluence/confluence/WEB-INF/atlassian-bundled-plugins/atlassian-universal-plugin-manager-plugin-2.22.1.jar
+chown -R confluence:confluence /var/atlassian/application-data
+chmod -R 777 /var/atlassian/application-data
 rm -rf mysql驱动/
 unzip mysql-connector-java-5.0.8-bin.jar.zip
-cp mysql驱动/mysql-connector-java-5.0.8-bin.jar /opt/atlassian/confluence/lib/
+cp -n mysql驱动/mysql-connector-java-5.0.8-bin.jar /opt/atlassian/confluence/lib/
+
+install_for_631() {
+cp -n atlassian-extras-decoder-v2-3.2.jar /opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.2.jar
+cp -n atlassian-universal-plugin-manager-plugin-2.22.jar /opt/atlassian/confluence/confluence/WEB-INF/atlassian-bundled-plugins/atlassian-universal-plugin-manager-plugin-2.22.1.jar
+}
+install_for_566() {
+ls /opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-*
+rm -rf /opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-*
+rm -rf confluence5.6.6-crack/
+unzip confluence5.6.6-crack.zip
+cp -n confluence5.6.6-crack/jar/* /opt/atlassian/confluence/confluence/WEB-INF/lib/
+}
+install_for_566
+##install_for_631
 
 /etc/init.d/confluence start
 

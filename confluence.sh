@@ -18,6 +18,7 @@ python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1AH-GDQ
 python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1cWxoY5P4SGrD7YBQNL_QOw
 python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1yOT9a4WCx9IsjtNL3ABNLQ
 python pan-baidu-download/bddown_cli.py download https://pan.baidu.com/s/1za0uLU0z6TPM5iNhkXfQFA
+wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.rpm
 }
 #do_download
 
